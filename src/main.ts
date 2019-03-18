@@ -1,5 +1,7 @@
-function hello(greet: string) {
-    console.log(`Hello from ${greet}.`);    
+function yes(name: string) {
+    const ele = document.getElementById("greeting")
+    ele.innerHTML = name;
 }
 
-hello("Cock");
+
+yes("40500");
