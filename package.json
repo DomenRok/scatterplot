@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/DomenRok/scatterplot#readme",
   "devDependencies": {
+    "@types/d3": "^5.7.1",
     "browserify": "^16.2.3",
     "gulp": "^3.9.1",
     "gulp-typescript": "^5.0.1",
@@ -25,5 +26,8 @@
     "typescript": "^3.3.3333",
     "vinyl-source-stream": "^2.0.0",
     "watchify": "^3.11.1"
+  },
+  "dependencies": {
+    "d3": "^3.5"
   }
 }
