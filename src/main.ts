@@ -1,49 +1,62 @@
 import * as d3 from 'd3';
+import { color } from 'd3';
 
 interface Coordinate {
   x: number,
   y: number,
 };
 
+let data = d3.csv("data.csv");
 
-var svg = d3.select("svg").attr("width", 600).attr("height", 600);
-
-let arrayOfObjects: Coordinate[] = [{x: 30, y:100}, {x:60, y:120}, {x:100, y:200}, {x: 120, y:240}];
-
-var scaleX = d3.scaleLinear()
-  .domain([10, 200])
-  .range([50, 550])
-  //.domain(d3.extent(arrayOfObjects.map(a => a.x)))
-var scaleY = d3.scaleLinear()
-  .domain([10, 200])  
-  .range([50, 550]);
-  //.domain(d3.extent(arrayOfObjects.map(a => a.y)))
+let width = 1280, height = 700;
+let svg = d3.select("svg").attr("width", width).attr("height", height);
 
 
 
   
-function render(data: Coordinate[]) {
-  // Select
+function render(data: any[]) {
+  let scaleX = d3.scaleLinear()
+  .domain([0, d3.max(data.map(a => +a.x)) + 30])
+  .range([0, width])
+  let scaleY = d3.scaleLinear()
+  .domain([0, d3.max(data.map(a => +a.y)) + 30])
+  .range([0, height])
+  
+  var axisX = d3.axisTop(scaleX);
+  svg.append("g")
+  .attr("transform", "translate(20, 685)")
+  .call(axisX);
+
+  var axisY = d3.axisLeft(scaleY)
+  svg.append("g")
+  .attr("transform", "translate(20, 20)")
+  .call(axisY)
+
+
   let circle = svg.selectAll("circle").data(data)
   
   // Enter
   circle
   .enter().append("circle")
-    .attr("cx", function(d) { return d.x; })
-    .attr("cy", function(d) { return d.y; })
-    .attr("r", 2.5)
+    .attr("cx", function(d) { return scaleX(d.x)})
+    .attr("cy", function(d) { return scaleY(d.y)})
+    .attr("r", 20)
+   .attr("border", "none")
   
-    
+  // Update 
   circle
-    .attr("r", function(d) { return d.x/100 + Math.random() * 40});
-
-
-  // Exit
+    .transition().duration(250)
+    .attr("r", function(d) { return Math.random() * 20})    
+    .attr("fill", function(d,i ) { return i % 2 ? "#F00" : "#0F0"})
+    // Exit
   circle.exit().remove()
 };
 
-render(arrayOfObjects);
+
+
+
+data.then(render);
 
 d3.interval(function() {
-  render(arrayOfObjects);
+  data.then(render);
 }, 500)
